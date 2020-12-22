@@ -10,7 +10,8 @@
       <div class="col s10 offset-s1">
         <div class="card-panel teal">
           <span class="white-text">
-            <p class="flow-text">{{date(new Date)}}</p><br>
+            <p class="flow-text">{{ date(new Date()) }}</p>
+            <br />
             <div class="input-field s12">
               <input
                 v-on:keyup.enter="addTodo"
@@ -18,14 +19,16 @@
                 id="newTodo"
                 type="text"
                 class="validate"
-              >
+              />
               <label class="active" for="newTodo">Enter new task</label>
             </div>
           </span>
         </div>
       </div>
       <div class="col s10 offset-s1">
-        <div v-if="todos.length === 0" class="white-text">The list is empty</div>
+        <div v-if="todos.length === 0" class="white-text">
+          The list is empty
+        </div>
         <ul
           v-else
           v-for="(todo, i) in todos"
@@ -37,7 +40,7 @@
               <input
                 type="checkbox"
                 class="filled-in"
-                :class="{done: todo.done}"
+                :class="{ done: todo.done }"
               />
               <span />
             </label>
@@ -46,7 +49,10 @@
               <blockquote>Added {{ date(todo.date) }}</blockquote>
             </div>
             <div class="col s2">
-              <a @click="removeTodo(todo.id)" class="btn-floating btn-middle waves-effect waves-right red">
+              <a
+                @click="removeTodo(todo.id)"
+                class="btn-floating btn-middle waves-effect waves-right red"
+              >
                 <i class="material-icons">clear</i>
               </a>
             </div>
@@ -59,42 +65,42 @@
 
 <script>
 export default {
-  name: 'TodoList',
+  name: "TodoList",
   props: {
-    msg: String
+    msg: String,
   },
   data: () => ({
     show: true,
-    todoTitle: '',
-    todos: []
+    todoTitle: "",
+    todos: [],
   }),
   methods: {
     addTodo() {
-      const title = this.todoTitle.trim()
-      
-      if (!title) return
+      const title = this.todoTitle.trim();
+
+      if (!title) return;
 
       this.todos.push({
         title,
         id: Math.random(),
         done: false,
-        date: new Date()
-      })
-      this.todoTitle = ''
+        date: new Date(),
+      });
+      this.todoTitle = "";
     },
     removeTodo(id) {
-      this.todos = this.todos.filter(t => t.id !== id)
+      this.todos = this.todos.filter((t) => t.id !== id);
     },
     date(value) {
-      return new Intl.DateTimeFormat('ru-RU', {
-        year: 'numeric',
-        month: 'long',
-        day: '2-digit'
-      }).format(new Date(value))
+      return new Intl.DateTimeFormat("ru-RU", {
+        year: "numeric",
+        month: "long",
+        day: "2-digit",
+      }).format(new Date(value));
     },
     capitalize(value) {
-      return value.toString().charAt(0).toUpperCase() + value.slice(1)
+      return value.toString().charAt(0).toUpperCase() + value.slice(1);
     },
   },
-}
+};
 </script>

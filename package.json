@@ -11,10 +11,12 @@
     "start": "cross-env NODE_ENV=production node server/index.js"
   },
   "dependencies": {
+    "axios": "^0.21.1",
     "body-parser": "^1.19.0",
     "compression": "^1.7.4",
     "core-js": "^3.6.5",
     "cors": "^2.8.5",
+    "cross-env": "^7.0.3",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "materialize-css": "^1.0.0-rc.2",
@@ -34,7 +36,16 @@
   "eslintConfig": {
     "root": true,
     "env": {
+      "es6": true,
+      "browser": true,
       "node": true
+    },
+    "globals": {
+      "window": true,
+      "document": true,
+      "navigator": true,
+      "fetch": true,
+      "localStorage": true
     },
     "extends": [
       "plugin:vue/vue3-essential",
@@ -43,7 +54,77 @@
     "parserOptions": {
       "parser": "babel-eslint"
     },
-    "rules": {}
+    "rules": {
+      "no-unused-vars": "warn",
+      "indent": [
+        "error",
+        2
+      ],
+      "no-unused-expressions": "off",
+      "import/no-unresolved": "off",
+      "import/prefer-default-export": "off",
+      "max-len": [
+        "warn",
+        {
+          "code": 150
+        }
+      ],
+      "camelcase": [
+        0,
+        {
+          "properties": "never",
+          "ignoreDestructuring": true
+        }
+      ],
+      "padding-line-between-statements": [
+        "error",
+        {
+          "blankLine": "always",
+          "prev": "*",
+          "next": "return"
+        },
+        {
+          "blankLine": "always",
+          "prev": "*",
+          "next": "continue"
+        },
+        {
+          "blankLine": "always",
+          "prev": "*",
+          "next": "if"
+        },
+        {
+          "blankLine": "always",
+          "prev": "*",
+          "next": "break"
+        },
+        {
+          "blankLine": "always",
+          "prev": "while",
+          "next": "*"
+        },
+        {
+          "blankLine": "always",
+          "prev": "*",
+          "next": "while"
+        },
+        {
+          "blankLine": "always",
+          "prev": "switch",
+          "next": "*"
+        },
+        {
+          "blankLine": "always",
+          "prev": "*",
+          "next": "switch"
+        },
+        {
+          "blankLine": "always",
+          "prev": "if",
+          "next": "*"
+        }
+      ]
+    }
   },
   "browserslist": [
     "> 1%",
