@@ -15,10 +15,7 @@ yarn serve
 yarn build
 ```
 
-### Lints and fixes files
+### Server start
 ```
-yarn lint
+yarn start
 ```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).

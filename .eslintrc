@@ -1,0 +1,83 @@
+{
+  "globals": {
+    "window": true,
+    "document": true,
+    "navigator": true,
+    "fetch": true,
+    "localStorage": true
+  },
+  "parser": "babel-eslint",
+  "extends": "airbnb",
+  "rules": {
+    "indent": [
+      "error",
+      2
+    ],
+    "react/jsx-fragments": "off",
+    "no-unused-expressions": "off",
+    "import/no-extraneous-dependencies": ["error", {"devDependencies": true}],
+    "import/no-unresolved": "off",
+    "import/prefer-default-export": "off",
+    "max-len": [
+      "warn",
+      {
+        "code": 150
+      }
+    ],
+    "camelcase": [
+      0,
+      {
+        "properties": "never",
+        "ignoreDestructuring": true
+      }
+    ],
+    "react/jsx-indent": [
+      "error",
+      2
+    ],
+    "react/prop-types": "off",
+    "react/jsx-filename-extension": [
+      1,
+      {
+        "extensions": [
+          ".js",
+          ".jsx",
+          ".ts",
+          ".tsx"
+        ]
+      }
+    ],
+    "react/jsx-indent-props": [
+      "error",
+      2
+    ],
+    "jsx-a11y/label-has-for": [
+      2,
+      {
+        "components": [
+          "Label"
+        ],
+        "required": {
+          "every": []
+        },
+        "allowChildren": false
+      }
+    ],
+    "jsx-a11y/label-has-associated-control": [
+      2,
+      {
+        "labelComponents": [
+          "CustomLabel"
+        ],
+        "labelAttributes": [
+          "inputLabel"
+        ],
+        "controlComponents": [
+          "CustomInput"
+        ],
+        "assert": "both",
+        "depth": 3
+      }
+    ]
+  }
+}
