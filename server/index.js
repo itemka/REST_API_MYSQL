@@ -5,6 +5,7 @@ const path = require('path');
 const cors = require('cors');
 const compression = require('compression');
 const todoRoutes = require('./routes/todo');
+const sequelize = require('./utils/database');
 
 dotenv.config('./env');
 
@@ -26,8 +27,18 @@ app.get('/', (req, res) => {
   res.send(`Hi! Server is listening on port ${PORT}`);
 });
 
-app.listen(PORT, (err) => {
-  if (err) throw err;
+async function start() {
+  try {
+    await sequelize.sync();
 
-  console.log(`> Ready on http://localhost:${PORT}`);
-});
+    app.listen(PORT, (err) => {
+      if (err) throw err;
+    
+      console.log(`> Ready on http://localhost:${PORT}`);
+    });
+  } catch (err) {
+    console.log(err);
+  }
+}
+
+start();

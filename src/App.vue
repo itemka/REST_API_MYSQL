@@ -22,5 +22,6 @@ export default {
 <style scoped>
 .app {
   background-color: #4c4d4c;
+  min-height: 100vh;
 }
 </style>
