@@ -11,6 +11,7 @@
         <div class="card-panel grey darken-4">
           <span class="white-text">
             <p class="flow-text">{{ date(new Date()) }}</p>
+            <p class="flow-text">{{ todos.length }} task(s)</p>
             <br />
             <div class="input-field s12">
               <input
@@ -48,7 +49,10 @@
             </label>
             <div class="col s9">
               <div>{{ capitalize(todo.title) }}</div>
-              <blockquote>Added {{ date(todo.date) }}</blockquote>
+              <blockquote>
+                Created at: {{ date(todo.createdAt, true) }} (updated at:
+                {{ date(todo.updatedAt, true) }})
+              </blockquote>
             </div>
             <div class="col s2">
               <a
@@ -66,7 +70,7 @@
 </template>
 
 <script>
-import { v4 as uuidv4 } from "uuid";
+import { API } from "../utils/api";
 
 export default {
   name: "TodoList",
@@ -78,39 +82,70 @@ export default {
     todoTitle: "",
     todos: [],
   }),
+  async created() {
+    try {
+      const {
+        data: { todos = [] },
+      } = await API.getTasks();
+
+      this.todos = todos;
+    } catch (err) {
+      console.log(err);
+    }
+  },
   methods: {
-    addTodo() {
-      const title = this.todoTitle.trim();
+    async addTodo() {
+      try {
+        const title = this.todoTitle.trim();
 
-      if (!title) return;
+        if (!title) return;
 
-      this.todos.push({
-        title,
-        id: uuidv4(),
-        done: false,
-        date: new Date(),
-      });
-      this.todoTitle = "";
+        const {
+          data: { todo = {} },
+        } = await API.createTasks({ title });
+
+        this.todos.push({ ...todo });
+        this.todoTitle = "";
+      } catch (err) {
+        console.log(err);
+      }
     },
-    removeTodo(id) {
-      this.todos = this.todos.filter((t) => t.id !== id);
+    async removeTodo(id) {
+      try {
+        const { status = 500 } = await API.deleteTasks(id);
+
+        if (status === 204) {
+          this.todos = this.todos.filter((todo) => todo.id !== id);
+        }
+      } catch (err) {
+        console.log(err);
+      }
     },
-    date(value) {
+    date(value, withTime = false) {
       return new Intl.DateTimeFormat("ru-RU", {
         year: "numeric",
         month: "long",
         day: "2-digit",
+        ...(withTime && {
+          hour: "2-digit",
+          minute: "2-digit",
+          second: "2-digit",
+        }),
       }).format(new Date(value));
     },
     capitalize(value) {
       return value.toString().charAt(0).toUpperCase() + value.slice(1);
     },
-    handleCheckbox(id) {
-      this.todos = this.todos.map((t) => {
-        if (t.id !== id) return t;
-
-        return { ...t, done: !t.done };
-      });
+    async handleCheckbox(id) {
+      try {
+        const idx = this.todos.findIndex((todo) => todo.id === id);
+        const updatedTodo = await API.updateTasks(id, {
+          done: !this.todos[idx].done,
+        });
+        this.todos[idx] = updatedTodo;
+      } catch (err) {
+        console.log(err);
+      }
     },
   },
 };
