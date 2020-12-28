@@ -17,5 +17,16 @@ module.exports = {
     } catch (err) {
       throw new Error('Title is required')
     }
+  },
+  async updateTasks({ id = null, done = false }) {
+    try {
+      const todo = await Todo.findByPk(+id);
+      todo.done = done;
+      await todo.save();
+
+      return todo;
+    } catch (err) {
+      throw new Error('Id is required')
+    }
   }
 }

@@ -20,17 +20,18 @@ const postRequest = (query) => apiClient.post(
 export const API = {
   getTasks: (query) => postRequest(query),
   createTasks: (query) => postRequest(query),
-  updateTasks: (id, body) => apiClient.put(
-    `${pathToAPI}/${id}`,
-    qs.stringify({ ...body }),
-    additionHeaders
-  ),
+  updateTasks: (query) => postRequest(query),
   deleteTasks: (id) => apiClient.delete(`${pathToAPI}/${id}`),
   
   // const pathToAPI = '/api/todo'; // using the usual rest api
   // getTasks: () => apiClient.get(pathToAPI),
   // createTasks: (body) => apiClient.post(
   //   pathToAPI,
+  //   qs.stringify({ ...body }),
+  //   additionHeaders
+  // ),
+  // updateTasks: (id, body) => apiClient.put(
+  //   `${pathToAPI}/${id}`,
   //   qs.stringify({ ...body }),
   //   additionHeaders
   // ),

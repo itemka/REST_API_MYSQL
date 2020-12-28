@@ -19,5 +19,6 @@ module.exports = buildSchema(`
 
   type Mutation {
     createTasks(todo: TodoInput!): Todo!
+    updateTasks(id: ID!, done: Boolean!): Todo!
   }
 `);

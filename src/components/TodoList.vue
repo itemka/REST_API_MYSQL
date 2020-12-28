@@ -169,10 +169,28 @@ export default {
     async handleCheckbox(id) {
       try {
         const idx = this.todos.findIndex((todo) => todo.id === id);
-        const updatedTodo = await API.updateTasks(id, {
-          done: !this.todos[idx].done,
-        });
-        this.todos[idx] = updatedTodo;
+        const currentDone = !this.todos[idx].done;
+        // using the usual rest api
+        // const updatedTodo = await API.updateTasks(id, { done: !this.todos[idx].done });
+        const {
+          data: {
+            data: {
+              updateTasks: { updatedAt = "" },
+            },
+          },
+        } = await API.updateTasks(`
+          mutation {
+            updateTasks(id: ${id}, done: ${currentDone}) {
+              updatedAt
+            }
+          }
+        `);
+
+        this.todos[idx] = {
+          ...this.todos[idx],
+          done: currentDone,
+          updatedAt,
+        };
       } catch (err) {
         console.log(err);
       }
