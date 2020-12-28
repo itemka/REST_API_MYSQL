@@ -11,18 +11,15 @@ const apiClient = axios.create({
 
 const pathToAPI = '/graphql';
 const additionHeaders = { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } };
+const postRequest = (query) => apiClient.post(
+  pathToAPI,
+  qs.stringify({ query }),
+  additionHeaders
+);
 
 export const API = {
-  getTasks: (query) => apiClient.post(
-    pathToAPI,
-    qs.stringify({ query }),
-    additionHeaders
-  ),
-  createTasks: (body) => apiClient.post(
-    pathToAPI,
-    qs.stringify({ ...body }),
-    additionHeaders
-  ),
+  getTasks: (query) => postRequest(query),
+  createTasks: (query) => postRequest(query),
   updateTasks: (id, body) => apiClient.put(
     `${pathToAPI}/${id}`,
     qs.stringify({ ...body }),
@@ -32,4 +29,9 @@ export const API = {
   
   // const pathToAPI = '/api/todo'; // using the usual rest api
   // getTasks: () => apiClient.get(pathToAPI),
+  // createTasks: (body) => apiClient.post(
+  //   pathToAPI,
+  //   qs.stringify({ ...body }),
+  //   additionHeaders
+  // ),
 };

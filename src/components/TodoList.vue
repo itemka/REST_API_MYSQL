@@ -115,11 +115,26 @@ export default {
 
         if (!title) return;
 
-        const {
-          data: { todo = {} },
-        } = await API.createTasks({ title });
+        // using the usual rest api
+        // const { data: { todo = {} } } = await API.createTasks({ title });
 
-        this.todos.push({ ...todo });
+        const {
+          data: {
+            data: { createTasks = {} },
+          },
+        } = await API.createTasks(`
+          mutation {
+            createTasks(todo: { title: "${title}" }) {
+              id
+              title
+              done
+              createdAt
+              updatedAt
+            }
+          }
+        `);
+
+        this.todos.push({ ...createTasks });
         this.todoTitle = "";
       } catch (err) {
         console.log(err);

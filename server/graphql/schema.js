@@ -9,7 +9,15 @@ module.exports = buildSchema(`
     updatedAt: String
   }
 
+  input TodoInput {
+    title: String!
+  }
+
   type Query {
     getTodos: [Todo!]!
+  }
+
+  type Mutation {
+    createTasks(todo: TodoInput!): Todo!
   }
 `);
