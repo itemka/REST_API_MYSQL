@@ -4,8 +4,13 @@ const dotenv = require('dotenv');
 const path = require('path');
 const cors = require('cors');
 const compression = require('compression');
-const todoRoutes = require('./routes/todo');
+const { graphqlHTTP } = require('express-graphql');
+const schema = require('./graphql/schema');
+const resolver = require('./graphql/resolver');
 const sequelize = require('./utils/database');
+// using the usual rest api
+// const todoRoutes = require('./routes/todo');
+// app.use('/api/todo', todoRoutes);
 
 dotenv.config('./env');
 
@@ -19,7 +24,11 @@ app.use(bodyParser.json());
 app.use(express.json());
 app.use(compression());
 
-app.use('/api/todo', todoRoutes);
+app.use(graphqlHTTP({
+  schema,
+  rootValue: resolver,
+  graphiql: true,
+}));
 
 app.get('/', (req, res) => {
   res.send(`Hi! Server is listening on port ${PORT}`);

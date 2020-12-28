@@ -84,11 +84,26 @@ export default {
   }),
   async created() {
     try {
-      const {
-        data: { todos = [] },
-      } = await API.getTasks();
+      // using the usual rest api
+      // const { data: { todos = [] } } = await API.getTasks();
 
-      this.todos = todos;
+      const {
+        data: {
+          data: { getTodos = [] },
+        },
+      } = await API.getTasks(`
+        query {
+          getTodos {
+            id
+            title
+            done
+            createdAt
+            updatedAt
+          }
+        }
+      `);
+
+      this.todos = getTodos;
     } catch (err) {
       console.log(err);
     }
@@ -131,7 +146,7 @@ export default {
           minute: "2-digit",
           second: "2-digit",
         }),
-      }).format(new Date(value));
+      }).format(new Date(+value));
     },
     capitalize(value) {
       return value.toString().charAt(0).toUpperCase() + value.slice(1);
