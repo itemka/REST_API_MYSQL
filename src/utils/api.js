@@ -9,30 +9,69 @@ const apiClient = axios.create({
   },
 });
 
-const pathToAPI = '/graphql';
+const pathToAPI = '/graphql'; // using the usual rest api - '/api/todo'
 const additionHeaders = { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } };
-const postRequest = (query) => apiClient.post(
+const graphqlPostRequest = (query) => apiClient.post(
   pathToAPI,
   qs.stringify({ query }),
   additionHeaders
 );
 
+export const GRAPHQL_QUERY = {
+  getTasks: () => `
+    query {
+      getTodos {
+        id
+        title
+        done
+        createdAt
+        updatedAt
+      }
+    }
+  `,
+  createTasks: (title) => `
+    mutation {
+      createTasks(todo: { title: "${title}" }) {
+        id
+        title
+        done
+        createdAt
+        updatedAt
+      }
+    }
+  `,
+  updateTasks: (id, done) => `
+    mutation {
+      updateTasks(id: ${id}, done: ${done}) {
+        updatedAt
+      }
+    }
+  `,
+  deleteTasks: (id) => `
+    mutation {
+      deleteTasks(id: ${id}) {
+        id
+      }
+    }
+  `
+}
+
+
 export const API = {
-  getTasks: (query) => postRequest(query),
-  createTasks: (query) => postRequest(query),
-  updateTasks: (query) => postRequest(query),
+  getTasks: () => apiClient.get(pathToAPI),
+  createTasks: (body) => apiClient.post(
+    pathToAPI,
+    qs.stringify({ ...body }),
+    additionHeaders
+  ),
+  updateTasks: (id, body) => apiClient.put(
+    `${pathToAPI}/${id}`,
+    qs.stringify({ ...body }),
+    additionHeaders
+  ),
   deleteTasks: (id) => apiClient.delete(`${pathToAPI}/${id}`),
-  
-  // const pathToAPI = '/api/todo'; // using the usual rest api
-  // getTasks: () => apiClient.get(pathToAPI),
-  // createTasks: (body) => apiClient.post(
-  //   pathToAPI,
-  //   qs.stringify({ ...body }),
-  //   additionHeaders
-  // ),
-  // updateTasks: (id, body) => apiClient.put(
-  //   `${pathToAPI}/${id}`,
-  //   qs.stringify({ ...body }),
-  //   additionHeaders
-  // ),
+  getTasksGraphQL: () => graphqlPostRequest(GRAPHQL_QUERY.getTasks()),
+  createTasksGraphQL: (title) => graphqlPostRequest(GRAPHQL_QUERY.createTasks(title)),
+  updateTasksGraphQL: (id, done) => graphqlPostRequest(GRAPHQL_QUERY.updateTasks(id, done)),
+  deleteTasksGraphQL: (id) => graphqlPostRequest(GRAPHQL_QUERY.deleteTasks(id))
 };

@@ -84,24 +84,12 @@ export default {
   }),
   async created() {
     try {
-      // using the usual rest api
-      // const { data: { todos = [] } } = await API.getTasks();
-
+      // using the usual rest api - await API.getTasks();
       const {
         data: {
           data: { getTodos = [] },
         },
-      } = await API.getTasks(`
-        query {
-          getTodos {
-            id
-            title
-            done
-            createdAt
-            updatedAt
-          }
-        }
-      `);
+      } = await API.getTasksGraphQL();
 
       this.todos = getTodos;
     } catch (err) {
@@ -115,24 +103,12 @@ export default {
 
         if (!title) return;
 
-        // using the usual rest api
-        // const { data: { todo = {} } } = await API.createTasks({ title });
-
+        // using the usual rest api - await API.createTasks({ title });
         const {
           data: {
             data: { createTasks = {} },
           },
-        } = await API.createTasks(`
-          mutation {
-            createTasks(todo: { title: "${title}" }) {
-              id
-              title
-              done
-              createdAt
-              updatedAt
-            }
-          }
-        `);
+        } = await API.createTasksGraphQL(title);
 
         this.todos.push({ ...createTasks });
         this.todoTitle = "";
@@ -142,9 +118,10 @@ export default {
     },
     async removeTodo(id) {
       try {
-        const { status = 500 } = await API.deleteTasks(id);
+        // using the usual rest api - await API.deleteTasks(id);
+        const { status = 500 } = await API.deleteTasksGraphQL(id);
 
-        if (status === 204) {
+        if (status === 200) {
           this.todos = this.todos.filter((todo) => todo.id !== id);
         }
       } catch (err) {
@@ -170,21 +147,14 @@ export default {
       try {
         const idx = this.todos.findIndex((todo) => todo.id === id);
         const currentDone = !this.todos[idx].done;
-        // using the usual rest api
-        // const updatedTodo = await API.updateTasks(id, { done: !this.todos[idx].done });
+        // using the usual rest api - await API.updateTasks(id, { done: !this.todos[idx].done });
         const {
           data: {
             data: {
               updateTasks: { updatedAt = "" },
             },
           },
-        } = await API.updateTasks(`
-          mutation {
-            updateTasks(id: ${id}, done: ${currentDone}) {
-              updatedAt
-            }
-          }
-        `);
+        } = await API.updateTasksGraphQL(id, currentDone);
 
         this.todos[idx] = {
           ...this.todos[idx],

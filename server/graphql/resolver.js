@@ -28,5 +28,15 @@ module.exports = {
     } catch (err) {
       throw new Error('Id is required')
     }
+  },
+  async deleteTasks({ id = null }) {
+    try {
+      const todos = await Todo.findAll({ where: { id: +id } });
+      await todos[0].destroy();
+
+      return todos[0];
+    } catch (err) {
+      throw new Error('Id is required')
+    }
   }
 }
